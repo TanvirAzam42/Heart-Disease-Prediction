@@ -1,0 +1,205 @@
+# Load necessary libraries
+library(caret)
+library(rpart)
+
+# Load your data
+data <- read.csv("your_data.csv")
+
+# Select different columns
+data <- data[,c("age", "sex", "cp", "trtbps", "chol", "fbs", "restecg", "thalachh", "exng", "oldpeak", "slp", "caa", "thall", "output")]
+
+# Split the data into training and test sets
+set.seed(123)
+index <- createDataPartition(data$output, p=0.7, list=FALSE)
+train_set <- data[index,]
+test_set <- data[-index,]
+
+# Logistic Regression
+logit_model <- glm(output ~ ., family=binomial(link='logit'), data=train_set)
+summary(logit_model)
+
+# Predict on test set
+logit_pred <- predict(logit_model, newdata=test_set, type="response")
+logit_pred <- ifelse(logit_pred > 0.5,1,0)
+
+# Decision Tree
+tree_model <- rpart(output ~ ., data=train_set, method="class")
+summary(tree_model)
+
+# Predict on test set
+tree_pred <- predict(tree_model, newdata=test_set, type="class")
+
+# Calculate Accuracy
+logit_acc <- sum(diag(confusionMatrix(as.factor(logit_pred), as.factor(test_set$output))$table)) / sum(confusionMatrix(as.factor(logit_pred), as.factor(test_set$output))$table)
+tree_acc <- sum(diag(confusionMatrix(as.factor(tree_pred), as.factor(test_set$output))$table)) / sum(confusionMatrix(as.factor(tree_pred), as.factor(test_set$output))$table)
+
+print(paste("Logistic Regression Accuracy: ", logit_acc))
+print(paste("Decision Tree Accuracy: ", tree_acc))
+
+
+
+
+k means- 
+# Load necessary libraries
+library(caret)
+
+# Load your data
+data <- read.csv("your_data.csv")
+
+# Select different columns
+data <- data[,c("age", "sex", "cp", "trtbps", "chol", "fbs", "restecg", "thalachh", "exng", "oldpeak", "slp", "caa", "thall", "output")]
+
+# Normalize the data
+data_norm <- as.data.frame(lapply(data, scale))
+
+# Determine the optimal number of clusters
+wss <- (nrow(data_norm)-1)*sum(apply(data_norm,2,var))
+for (i in 2:15) wss[i] <- sum(kmeans(data_norm, centers=i)$withinss)
+
+# Plot the elbow curve
+plot(1:15, wss, type="b", xlab="Number of Clusters", ylab="Within groups sum of squares")
+
+# Apply k-means clustering
+kmeans_result <- kmeans(data_norm, centers=3)  # replace 3 with the number of clusters you determined
+
+# Print the results
+print(kmeans_result)
+
+# Calculate Accuracy
+table(predicted = kmeans_result$cluster, actual = data$output)
+
+
+
+
+#to calculate mean mode max values------
+
+# Assuming 'df' is your dataframe
+df <- read.csv("yourfile.csv") # replace 'yourfile.csv' with your actual file name
+
+# Calculate statistics
+mean_values <- sapply(df, mean, na.rm = TRUE)
+max_values <- sapply(df, max, na.rm = TRUE)
+variance_values <- sapply(df, var, na.rm = TRUE)
+
+# Calculate mode
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+mode_values <- sapply(df, getmode)
+
+# Print the calculated values
+print(paste("Mean: ", mean_values))
+print(paste("Max: ", max_values))
+print(paste("Mode: ", mode_values))
+print(paste("Variance: ", variance_values))
+
+# Plot histogram for a column (replace 'age' with your column name)
+hist(df$age, main="Histogram for Age", xlab="Age")
+
+# If you want to plot pie chart for a categorical column (replace 'sex' with your column name)
+pie(table(df$sex), main="Pie Chart for Sex")
+
+
+#to plot decisiontree-
+# Load necessary library
+library(rpart)
+
+# Assuming 'data' is your data frame and 'output' is the target variable
+fit <- rpart(output ~ age + sex + cp + trtbps + chol + fbs + restecg + thalachh + exng + oldpeak + slp + caa + thall, data = data, method = "class")
+
+# Print the decision tree
+printcp(fit)
+
+# Plot the decision tree
+plot(fit, uniform=TRUE, main="Decision Tree")
+text(fit, use.n=TRUE, all=TRUE, cex=.8)
+
+
+
+
+
+
+
+
+
+report-
+Sure, here is a basic outline for your report:
+
+1. **Problem Statement**: The goal of this project is to predict the output variable using various machine learning algorithms and compare their performance.
+
+2. **Need**: This analysis is important because it allows us to understand which factors are most influential in predicting the output variable, and which machine learning algorithms are most effective for this particular dataset.
+
+3. **Methodology**: The methodology involved preprocessing the data, selecting relevant features, splitting the data into training and test sets, training various machine learning models including logistic regression and decision tree, and evaluating their performance.
+
+4. **Dataset Used**: The dataset used in this project contains the following columns: age, sex, cp, trtbps, chol, fbs, restecg, thalachh, exng, oldpeak, slp, caa, thall, output. Please replace this with a more detailed description of your dataset.
+
+5. **Algorithm**: The machine learning algorithms used in this project are logistic regression and decision tree. Logistic regression is a statistical model used for binary classification problems. Decision tree is a type of supervised learning algorithm that is mostly used for classification problems.
+
+6. **Results**: The results of the analysis showed that both logistic regression and decision tree models were able to predict the output variable with reasonable accuracy. Please replace this with the actual results of your analysis.
+
+7. **Applications**: The findings of this project could be applied in various fields such as healthcare, finance, marketing etc., depending on what the output variable represents. For example, if the output variable represents whether or not a patient has a certain disease, then this model could be used to assist doctors in diagnosing patients.
+
+8. **References**:
+    -  Cessie S., Houwelingen J.C.van (1992). Ridge Estimators in Logistic Regression. Applied Statistics, Vol 41, No. 1.
+    -  Breiman L., Friedman J.H., Olshen R.A., Stone C.J. (1984). Classification and Regression Trees.
+    -  Obermeyer Z., Emanuel E.J. (2016). Predicting the Future — Big Data, Machine Learning, and Clinical Medicine. The New England Journal of Medicine.
+
+Please note that you'll need to replace some parts of this outline with information specific to your project and dataset.\\\\
+
+
+
+
+
+
+
+
+
+
+
+histogram--- 
+
+
+# Assuming 'data' is your dataframe
+# Load the necessary library
+library(ggplot2)
+
+# Create a histogram for the 'age' column
+ggplot(data, aes(x=age)) + 
+  geom_histogram(binwidth=1, color="black", fill="white") +
+  labs(title="Histogram for Age", x="Age", y="Frequency")
+
+# Create a histogram for the 'trtbps' column
+ggplot(data, aes(x=trtbps)) + 
+  geom_histogram(binwidth=1, color="black", fill="white") +
+  labs(title="Histogram for trtbps", x="trtbps", y="Frequency")
+
+# Create a histogram for the 'chol' column
+ggplot(data, aes(x=chol)) + 
+  geom_histogram(binwidth=1, color="black", fill="white") +
+  labs(title="Histogram for chol", x="chol", y="Frequency")
+
+
+
+
+frequency-
+
+# Assuming 'data' is your dataframe
+# Load the necessary library
+library(ggplot2)
+
+# Create a density plot for the 'age' column
+ggplot(data, aes(x=age)) + 
+  geom_density(fill="blue", alpha=0.3) +
+  labs(title="Density Plot for Age", x="Age", y="Density")
+
+# Create a density plot for the 'trtbps' column
+ggplot(data, aes(x=trtbps)) + 
+  geom_density(fill="blue", alpha=0.3) +
+  labs(title="Density Plot for trtbps", x="trtbps", y="Density")
+
+# Create a density plot for the 'chol' column
+ggplot(data, aes(x=chol)) + 
+  geom_density(fill="blue", alpha=0.3) +
+  labs(title="Density Plot for chol", x="chol", y="Density")
+
